@@ -2,7 +2,7 @@
 Projeto criado para produzir um jogo em C, para a matéria de Programação Impertativa e Funcional, na Cesar School.
 
 Integrantes:
-- Gustavo Lino - @GustavoLin728
+- Gustavo Lino - @GustavoLino728
 - Italo Vasconcelos - @ItaloVasconcelos05
 - Giulliano Muniz - @giulms
 
