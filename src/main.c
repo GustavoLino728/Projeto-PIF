@@ -16,7 +16,7 @@ int naveXCima = 35;  // Posição inicial de NAVEZINHA CIMA no eixo X
 int yPosicaoCima = 2; // Posição inicial de NAVEZINHA CIMA no eixo Y
 
 // Códigos ASCII para setas (em sequências de escape ANSI)
-
+#define TECLA 27
 #define ARROW_PREFIX '['
 #define LEFT_ARROW 'D'
 #define RIGHT_ARROW 'C'
@@ -63,7 +63,7 @@ void displayScore() {
 
 int readArrowKey() {
     int ch = readch();
-    if (ch == ESC) {
+    if (ch == TECLA) {
         if (readch() == ARROW_PREFIX) {
             ch = readch();
             if (ch == LEFT_ARROW || ch == RIGHT_ARROW) {
