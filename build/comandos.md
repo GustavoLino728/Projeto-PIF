@@ -1,0 +1,1 @@
+gcc ../src/*.c -I ../include/ -o *nome
