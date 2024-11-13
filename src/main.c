@@ -13,12 +13,6 @@ int naveYBaixo = 22; // Posição inicial de NAVEZINHA BAIXO no eixo Y
 int naveXCima = 35;  // Posição inicial de NAVEZINHA CIMA no eixo X
 int yPosicaoCima = 2; // Posição inicial de NAVEZINHA CIMA no eixo Y
 
-// Códigos ASCII para setas (em sequências de escape ANSI)
-#define ESC "\033"
-#define ARROW_PREFIX '['
-#define LEFT_ARROW 'D'
-#define RIGHT_ARROW 'C'
-
 // Pontuação dos jogadores
 int pontosBaixo = 0; // Pontos do jogador que controla NAVEZINHA BAIXO
 int pontosCima = 0;  // Pontos do jogador que controla NAVEZINHA CIMA
@@ -97,19 +91,19 @@ int main()
 
         if (timerTimeOver()) {
             // Movimenta NAVEZINHA BAIXO para a esquerda ('a') ou direita ('d')
-            if (ch == 'a' && naveXBaixo > 0) 
+            if (ch == 'a' && naveXBaixo > 2) 
             {
                 screenGotoxy(naveXBaixo, naveYBaixo);
-                printf("               ");
+                printf("     ");
                 naveXBaixo--; 
                 printNaveBaixo(naveXBaixo, naveYBaixo);
                 displayScore(); 
                 screenUpdate();
             }
-            else if (ch == 'd' && naveXBaixo < (MAXX - 15)) 
+            else if (ch == 'd' && naveXBaixo < (MAXX - 6)) 
             {
                 screenGotoxy(naveXBaixo, naveYBaixo);
-                printf("               ");
+                printf("     ");
                 naveXBaixo++; 
                 printNaveBaixo(naveXBaixo, naveYBaixo);
                 displayScore(); 
@@ -117,19 +111,19 @@ int main()
             }
 
             // Movimenta NAVEZINHA CIMA para a esquerda ('g') ou direita ('j')
-            if (ch == 'g' && naveXCima > 0)
+            if (ch == 'g' && naveXCima > 2)
             {
                 screenGotoxy(naveXCima, yPosicaoCima);
-                printf("               ");
+                printf("     ");
                 naveXCima--; 
                 printNaveCima(naveXCima, yPosicaoCima);
                 displayScore(); 
                 screenUpdate();
             }
-            else if (ch == 'j' && naveXCima < (MAXX - 15))
+            else if (ch == 'j' && naveXCima < (MAXX - 6))
             {
                 screenGotoxy(naveXCima, yPosicaoCima);
-                printf("               ");
+                printf("     ");
                 naveXCima++; 
                 printNaveCima(naveXCima, yPosicaoCima);
                 displayScore(); 
