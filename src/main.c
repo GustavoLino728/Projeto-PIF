@@ -7,44 +7,44 @@
 #include "keyboard.h"
 #include "timer.h"
 
-// Declarações das variáveis
-int naveXBaixo = 35; // Posição inicial de NAVEZINHA BAIXO no eixo X
-int naveYBaixo = 22; // Posição inicial de NAVEZINHA BAIXO no eixo Y
-int naveXCima = 35;  // Posição inicial de NAVEZINHA CIMA no eixo X
-int yPosicaoCima = 2; // Posição inicial de NAVEZINHA CIMA no eixo Y
 
-// Pontuação dos jogadores
-int pontosBaixo = 0; // Pontos do jogador que controla NAVEZINHA BAIXO
-int pontosCima = 0;  // Pontos do jogador que controla NAVEZINHA CIMA
+int naveXBaixo = 35; 
+int naveYBaixo = 22; 
+int naveXCima = 35; 
+int yPosicaoCima = 2; 
 
-// Definição dos limites da tela
+int pontosBaixo = 0;
+int pontosCima = 0; 
+
+
 #define LIMITE_SUPERIOR 1
 #define LIMITE_INFERIOR 26
+#define PONTOS_PARA_VENCER 5
 
 void printBalaBaixo(int naveX, int naveY) {
     screenSetColor(CYAN, DARKGRAY);
-    screenGotoxy(naveX + 2, naveY - 1); // Posição um pixel acima da nave
+    screenGotoxy(naveX + 2, naveY - 1); 
     printf("|");
 }
 
 void printBalaCima(int naveX, int naveY) {
     screenSetColor(CYAN, DARKGRAY);
-    screenGotoxy(naveX + 2, naveY + 1); // Posição um pixel abaixo da nave
+    screenGotoxy(naveX + 2, naveY + 1); 
     printf("|");
 }
 
 void clearBala(int x, int startY, int endY, int naveYBaixo, int naveYCima) {
-    screenSetColor(BLACK, DARKGRAY); // Define a cor de fundo como preta para "apagar"
+    screenSetColor(BLACK, DARKGRAY); 
 
     for (int y = startY; y != endY; y += (startY < endY ? 1 : -1)) {
-        // Verifica se a posição atual está sobrepondo a nave de baixo
+        
         if (y == naveYBaixo) continue;
 
-        // Verifica se a posição atual está sobrepondo a nave de cima
+        
         if (y == naveYCima) continue;
 
-        screenGotoxy(x + 2, y); // Ajuste para apagar na posição exata da bala
-        printf(" "); // Apaga o caractere da bala
+        screenGotoxy(x + 2, y); 
+        printf(" "); 
     }
     screenUpdate();
 }
@@ -61,10 +61,22 @@ void printNaveCima(int naveX, int yPosicaoCima) {
     printf("/-|-/");
 }
 
+void displayWinner(int jogador) {
+    screenClear();
+    screenGotoxy(MAXX / 2 - 15, MAXY / 2);
+    if (jogador == 1) {
+        printf("Parabéns Jogador Baixo! Você ganhou a partida!");
+    } else {
+        printf("Parabéns Jogador Cima! Você ganhou a partida!");
+    }
+    screenUpdate();
+    sleep(3); 
+}
+
 void displayScore() {
-    screenGotoxy(MAXX - 10, 1); // Coloca a pontuação no canto direito superior
+    screenGotoxy(MAXX - 10, 1); 
     printf("Pontos: %d", pontosBaixo);
-    screenGotoxy(2, 1); // Coloca a pontuação do jogador de cima no canto esquerdo superior
+    screenGotoxy(2, 1); 
     printf("Pontos: %d", pontosCima);
 }
 
@@ -77,20 +89,19 @@ int main()
 
     screenInit(1);
     keyboardInit();
-    timerInit(50);  // Define o temporizador com um intervalo de 50 ms
+    timerInit(50);  
 
 
     printNaveBaixo(naveXBaixo, naveYBaixo);
     printNaveCima(naveXCima, yPosicaoCima);
-    displayScore(); // Exibe a pontuação inicial
+    displayScore(); 
     screenUpdate();
 
-    while (ch != 10) // enter
+    while (ch != 27) 
     {
-        ch = getchar(); // Lê a tecla pressionada
+        ch = readch(); 
 
         if (timerTimeOver()) {
-            // Movimenta NAVEZINHA BAIXO para a esquerda ('a') ou direita ('d')
             if (ch == 'a' && naveXBaixo > 2) 
             {
                 screenGotoxy(naveXBaixo, naveYBaixo);
@@ -110,7 +121,7 @@ int main()
                 screenUpdate();
             }
 
-            // Movimenta NAVEZINHA CIMA para a esquerda ('g') ou direita ('j')
+        
             if (ch == 'g' && naveXCima > 2)
             {
                 screenGotoxy(naveXCima, yPosicaoCima);
@@ -130,7 +141,6 @@ int main()
                 screenUpdate();
             }
 
-            // Movimenta a bala para cima ao pressionar 'f'
             if (ch == 'f') 
             {
                 balaYBaixo = naveYBaixo;
@@ -142,25 +152,29 @@ int main()
                         printBalaBaixo(naveXBaixo, balaYBaixo);
                         screenUpdate();
 
-                        // Verifica se a bala bateu na NAVEZINHA CIMA
-                        if (balaYBaixo == yPosicaoCima && naveXBaixo == naveXCima || balaYBaixo == yPosicaoCima && naveXBaixo == naveXCima + 1 || balaYBaixo == yPosicaoCima && naveXBaixo == naveXCima - 1 || balaYBaixo == yPosicaoCima && naveXBaixo == naveXCima + 2 || balaYBaixo == yPosicaoCima && naveXBaixo == naveXCima - 2) {
+            
+                        if (balaYBaixo == yPosicaoCima && abs(naveXBaixo - naveXCima) <= 2) {
                             pontosBaixo++;
-                            displayScore(); 
-                            break;
+                            displayScore();
+                            if (pontosBaixo == PONTOS_PARA_VENCER) {
+                                displayWinner(1);
+                                return 0;
                             }
-
-                        // Se a bala atingir o limite superior, apaga todos os rastros
+                            break;
+                        }
+                    
                         if (balaYBaixo == LIMITE_SUPERIOR) {
                             clearBala(naveXBaixo, naveYBaixo, LIMITE_SUPERIOR, naveYBaixo, yPosicaoCima);
                             break;
                         }
                     }
                 }
-                // Apaga qualquer rastro restante da bala após a movimentação
+            
                 clearBala(naveXBaixo, naveYBaixo, LIMITE_SUPERIOR, naveYBaixo, yPosicaoCima);
-            }
+                }
+                
 
-            // Movimenta a bala para baixo ao pressionar 'k'
+           
             if (ch == 'k') 
             {
                 balaYCima = yPosicaoCima;
@@ -172,21 +186,25 @@ int main()
                         printBalaCima(naveXCima, balaYCima);
                         screenUpdate();
 
-                        // Verifica se a bala bateu na NAVEZINHA BAIXO
-                        if (balaYCima == naveYBaixo && naveXCima == naveXBaixo || balaYCima == naveYBaixo && naveXCima == naveXBaixo + 1 || balaYCima == naveYBaixo && naveXCima == naveXBaixo - 1 || balaYCima == naveYBaixo && naveXCima == naveXBaixo + 2 || balaYCima == naveYBaixo && naveXCima == naveXBaixo - 2) {
+                
+                        if (balaYCima == naveYBaixo && abs(naveXCima - naveXBaixo) <= 2) {
                             pontosCima++;
-                            displayScore(); 
+                            displayScore();
+                            if (pontosCima == PONTOS_PARA_VENCER) {
+                                displayWinner(2);
+                                return 0;
+                            }
                             break;
-                        }
+                         } 
 
-                        // Se a bala atingir o limite inferior, apaga todos os rastros
+                        
                         if (balaYCima == LIMITE_INFERIOR) {
                             clearBala(naveXCima, yPosicaoCima, LIMITE_INFERIOR, naveYBaixo, yPosicaoCima);
                             break;
                         }
                     }
                 }
-                // Apaga qualquer rastro restante da bala após a movimentação
+               
                 clearBala(naveXCima, yPosicaoCima, LIMITE_INFERIOR, naveYBaixo, yPosicaoCima);
             }
         }

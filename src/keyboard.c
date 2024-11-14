@@ -7,7 +7,7 @@
 
 #include <termios.h>
 #include <unistd.h>
-
+#include <sys/select.h>
 #include "keyboard.h"
 
 static struct termios initialSettings, newSettings;
